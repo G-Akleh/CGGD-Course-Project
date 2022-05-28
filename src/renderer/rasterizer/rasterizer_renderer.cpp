@@ -35,7 +35,7 @@ void cg::renderer::rasterization_renderer::init()
 }
 void cg::renderer::rasterization_renderer::render()
 {
-	rasterizer->clear_render_target({111, 15, 112});
+	rasterizer->clear_render_target({30, 255, 255});
 
 	// TODO: Lab 1.04. Implement `vertex_shader` lambda for the instance of `cg::renderer::rasterizer`
 
