@@ -9,7 +9,6 @@ void cg::renderer::rasterization_renderer::init()
 			settings->width, settings->height);
 	rasterizer = std::make_shared<cg::renderer::rasterizer<cg::vertex, cg::unsigned_color>>();
 	rasterizer->set_viewport(settings->width, settings->height);
-	rasterizer->set_render_target(render_target);
 
 	// TODO: Lab 1.03. Adjust `cg::renderer::rasterization_renderer` class to consume `cg::world::model`
 	model = std::make_shared<cg::world::model>();
@@ -32,6 +31,11 @@ void cg::renderer::rasterization_renderer::init()
 	camera->set_z_near(settings->camera_z_near);
 	camera->set_z_far(settings->camera_z_far);
 	// TODO: Lab 1.06. Add depth buffer in cg::renderer::rasterization_renderer
+
+	depth_buffer = std::make_shared<cg::resource<float>>(
+			settings->width, settings->height);
+	rasterizer->set_render_target(render_target,
+								  depth_buffer);
 }
 void cg::renderer::rasterization_renderer::render()
 {
