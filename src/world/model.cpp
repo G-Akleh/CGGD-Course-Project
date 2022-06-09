@@ -114,8 +114,7 @@ void cg::world::model::load_obj(const std::filesystem::path& model_path)
 						idx.texcoord_index);
 				if (index_map.count(idx_tuple) == 0)
 				{
-					cg::vertex& vertex = vertex_buffer->item(
-							vertex_buffer_id);
+					cg::vertex& vertex = vertex_buffer->item(vertex_buffer_id);
 
 					vertex.x = attrib.vertices[3 * idx.vertex_index];
 					vertex.y = attrib.vertices[3 * idx.vertex_index + 1];
