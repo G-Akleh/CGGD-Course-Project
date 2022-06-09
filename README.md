@@ -31,3 +31,8 @@ cmake .. -A x64
 - [Cornell Box models](https://casual-effects.com/g3d/data10/index.html#) by Morgan McGuire (CC BY 3.0 License)
 - [Cube model](https://casual-effects.com/g3d/data10/index.html#) by Morgan McGuire (CC BY 3.0 License)
 - [Dabrovic Sponza](https://casual-effects.com/g3d/data10/index.html#) by Marko Dabrovic (CC BY-NC)
+
+
+# Student: Ghadeer Akleh
+# Group: BS21-01
+# Mail: g.akleh@innopolis.university
