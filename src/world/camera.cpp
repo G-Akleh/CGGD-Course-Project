@@ -61,6 +61,8 @@ void cg::world::camera::set_z_far(float in_z_far)
 
 const float4x4 cg::world::camera::get_view_matrix() const
 {
+	//Lab 1.04. Implement `cg::world::camera` class
+
 	float3 up{0.f, 1.f, 0.f};
 	float3 eye = position + get_direction();
 
@@ -98,7 +100,7 @@ const float4x4 cg::world::camera::get_projection_matrix() const
 	return float4x4{
 			{f / aspect_ratio, 0, 0, 0},
 			{0, f, 0, 0},
-			{0, 0, z_far / (z_near - z_far), -2},
+			{0, 0, z_far / (z_near - z_far), -1},
 			{0, 0, (z_far * z_near) / (z_near - z_far), 0}
 
 	};
@@ -106,7 +108,6 @@ const float4x4 cg::world::camera::get_projection_matrix() const
 
 const float3 cg::world::camera::get_position() const
 {
-	// TODO: Lab 1.04. Implement `cg::world::camera` class
 	return position;
 }
 
