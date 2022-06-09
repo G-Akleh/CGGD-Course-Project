@@ -39,9 +39,9 @@ void cg::renderer::rasterization_renderer::init()
 }
 void cg::renderer::rasterization_renderer::render()
 {
-	rasterizer->clear_render_target({111, 15, 112});
+	rasterizer->clear_render_target({112, 15, 115});
 
-	// TODO: Lab 1.04. Implement `vertex_shader` lambda for the instance of `cg::renderer::rasterizer`
+	//Lab 1.04. Implement `vertex_shader` lambda for the instance of `cg::renderer::rasterizer`
 
 	float4x4  matrix = mul(
 			camera->get_projection_matrix(),
@@ -53,7 +53,7 @@ void cg::renderer::rasterization_renderer::render()
 		return std::make_pair(processed, vertex_data);
 	};
 
-	// TODO: Lab 1.05. Implement `pixel_shader` lambda for the instance of `cg::renderer::rasterizer`
+	//Lab 1.05. Implement `pixel_shader` lambda for the instance of `cg::renderer::rasterizer`
 	rasterizer->pixel_shader = [](cg::vertex vertex_data, float z){
 		return cg::color{
 			vertex_data.ambient_r,
