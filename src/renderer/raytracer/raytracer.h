@@ -54,7 +54,21 @@ namespace cg::renderer
 	inline triangle<VB>::triangle(
 			const VB& vertex_a, const VB& vertex_b, const VB& vertex_c)
 	{
-		// TODO: Lab 2.02. Implement a constructor of triangle struct
+		//Lab 2.02. Implement a constructor of triangle struct
+		a = float3{vertex_a.x, vertex_a.y, vertex_a.z};
+		b = float3{vertex_b.x, vertex_b.y, vertex_b.z};
+		c = float3{vertex_c.x, vertex_c.y, vertex_c.z};
+
+		ba = b - a;
+		ca = c - a;
+
+		na = float3{vertex_a.nx, vertex_a.ny, vertex_a.nz};
+		nb = float3{vertex_b.nx, vertex_b.ny, vertex_b.nz};
+		nc = float3{vertex_c.nx, vertex_c.ny, vertex_c.nz};
+
+		ambient = {vertex_a.ambient_r, vertex_a.ambient_g, vertex_a.ambient_b};
+		diffuse = {vertex_a.diffuse_r, vertex_a.diffuse_g, vertex_a.diffuse_b};
+		emissive = {vertex_a.emissive_r, vertex_a.emissive_g, vertex_a.emissive_b};
 	}
 
 	template<typename VB>
@@ -195,7 +209,7 @@ namespace cg::renderer
 			const ray& ray, size_t depth, float max_t, float min_t) const
 	{
 		//Lab 2.01. Implement ray_generation and trace_ray method of raytracer class
-		if(depth == 0)
+		if (depth == 0)
 		{
 			return miss_shader(ray);
 		}
