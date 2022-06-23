@@ -204,25 +204,38 @@ namespace cg::renderer
 			float3 position, float3 direction,
 			float3 right, float3 up, size_t depth, size_t accumulation_num)
 	{
-		//Lab 2.01. Implement ray_generation and trace_ray method of raytracer class
-		for (int x = 0; x < width; x++)
+		float frame_weight = 1.f / static_cast<float>(accumulation_num);
+		for (int frame_id = 0; frame_id < accumulation_num; frame_id++)
 		{
-#pragma omp parallel for
-			for (int y = 0; y < height; y++)
+			std::cout<<"Tracing frame #" << frame_id + 1<<"\n";
+			float2 jitter = get_jitter(frame_id);
+			//Lab 2.01. Implement ray_generation and trace_ray method of raytracer class
+			for (int x = 0; x < width; x++)
 			{
-				float u = (2.f * x) / static_cast<float>(width - 1) - 1.f;
-				float v = (2.f * y) / static_cast<float>(height - 1) - 1.f;
-				u *= static_cast<float>(width) / static_cast<float>(height);
-				float3 ray_direction = direction + u * right - v * up;
-				ray ray(position, ray_direction);
+#pragma omp parallel for
+				for (int y = 0; y < height; y++)
+				{
+					float u = (2.f * x + jitter.x) / static_cast<float>(width - 1) - 1.f;
+					float v = (2.f * y + jitter.y) / static_cast<float>(height - 1) - 1.f;
+					u *= static_cast<float>(width) / static_cast<float>(height);
+					float3 ray_direction = direction + u * right - v * up;
+					ray ray(position, ray_direction);
 
-				payload payload = trace_ray(ray, depth);
+					payload payload = trace_ray(ray, depth);
 
-				render_target->item(x, y) = RT::from_color(payload.color);
+					auto& history_pixel = history->item(x, y);
+					history_pixel += sqrt(float3{
+							payload.color.r,
+							payload.color.g,
+							payload.color.b,}
+										  *frame_weight);
+
+					render_target->item(x, y) = RT::from_float3(payload.color);
+				}
 			}
 		}
-		// TODO: Lab 2.06. Add `history` resource in `raytracer` class
-		// TODO: Lab 2.06. Implement TAA in `ray_generation` method of `raytracer` class
+		//Lab 2.06. Add `history` resource in `raytracer` class
+		//Lab 2.06. Implement TAA in `ray_generation` method of `raytracer` class
 	}
 
 	template<typename VB, typename RT>
@@ -241,9 +254,9 @@ namespace cg::renderer
 		const triangle<VB>* closest_triangle = nullptr;
 
 		//Lab 2.05. Adjust trace_ray method of raytracer class to traverse the acceleration structure
-		for(auto& aabb: acceleration_structures)
+		for (auto& aabb: acceleration_structures)
 		{
-			if(!aabb.aabb_test(ray))
+			if (!aabb.aabb_test(ray))
 			{
 				continue;
 			}
@@ -297,7 +310,7 @@ namespace cg::renderer
 		}
 		float3 qvec = cross(tvec, triangle.ba);
 		float v = dot(ray.direction, qvec) * inv_det;
-		if (v < 0.f || u + v > 1.f){
+		if (v < 0.f || u + v > 1.f) {
 			return payload;
 		}
 		payload.t = dot(triangle.ca, qvec) * inv_det;
@@ -313,9 +326,9 @@ namespace cg::renderer
 		float2 result{0.f, 0.f};
 		constexpr int base_x = 2;
 		int index = frame_id + 1;
-		float inv_base = 1.f/base_x;
+		float inv_base = 1.f / base_x;
 		float fraction = inv_base;
-		while(index > 0)
+		while (index > 0)
 		{
 			result.x += (index % base_x) * fraction;
 			index /= base_x;
@@ -324,9 +337,9 @@ namespace cg::renderer
 
 		constexpr int base_y = 3;
 		index = frame_id + 1;
-		inv_base = 1.f/base_y;
+		inv_base = 1.f / base_y;
 		fraction = inv_base;
-		while(index > 0)
+		while (index > 0)
 		{
 			result.y += (index % base_y) * fraction;
 			index /= base_y;
@@ -340,7 +353,7 @@ namespace cg::renderer
 	inline void aabb<VB>::add_triangle(const triangle<VB> triangle)
 	{
 		//Lab 2.05. Implement aabb class
-		if (triangles.empty()){
+		if (triangles.empty()) {
 			aabb_max = aabb_min = triangle.a;
 		}
 		triangles.push_back(triangle);
@@ -364,7 +377,7 @@ namespace cg::renderer
 	inline bool aabb<VB>::aabb_test(const ray& ray) const
 	{
 		//Lab 2.05. Implement aabb class
-		float3 inv_ray_direction =  float3{1.f} / ray.direction;
+		float3 inv_ray_direction = float3{1.f} / ray.direction;
 		float3 t0 = (aabb_max - ray.position) * inv_ray_direction;
 		float3 t1 = (aabb_min - ray.position) * inv_ray_direction;
 		float3 tmax = max(t0, t1);
