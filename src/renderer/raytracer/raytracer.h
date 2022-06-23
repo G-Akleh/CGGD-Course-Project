@@ -239,6 +239,12 @@ namespace cg::renderer
 			{
 				closest_hit_payload = payload;
 				closest_triangle = &triangle;
+
+				//Lab 2.04. Adjust `trace_ray` method of `raytracer` to use `any_hit_shader`
+				if(any_hit_shader)
+				{
+					return any_hit_shader(ray, payload, triangle);
+				}
 			}
 		}
 
@@ -251,7 +257,6 @@ namespace cg::renderer
 		}
 
 		return miss_shader(ray);
-		// TODO: Lab 2.04. Adjust `trace_ray` method of `raytracer` to use `any_hit_shader`
 		// TODO: Lab 2.05. Adjust trace_ray method of raytracer class to traverse the acceleration structure
 	}
 
