@@ -230,7 +230,7 @@ namespace cg::renderer
 							payload.color.b,}
 										  *frame_weight);
 
-					render_target->item(x, y) = RT::from_float3(payload.color);
+					render_target->item(x, y) = RT::from_float3(history_pixel);
 				}
 			}
 		}
