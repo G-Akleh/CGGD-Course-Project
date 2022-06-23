@@ -278,7 +278,7 @@ namespace cg::renderer
 		}
 		float3 qvec = cross(tvec, triangle.ba);
 		float v = dot(ray.direction, qvec) * inv_det;
-		if (u < 0.f || u + v > 1.f){
+		if (v < 0.f || u + v > 1.f){
 			return payload;
 		}
 		payload.t = dot(triangle.ca, qvec) * inv_det;
